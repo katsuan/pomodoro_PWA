@@ -26,21 +26,21 @@ self.addEventListener('fetch', function (event) {
     );
 });
 
-// 通知を受け取ったときの処理
-self.addEventListener('notificationclick', function (event) {
-    console.log('Notification clicked!');
-    event.notification.close();
+// // 通知を受け取ったときの処理
+// self.addEventListener('notificationclick', function (event) {
+//     console.log('Notification clicked!');
+//     event.notification.close();
 
-    // 通知をクリックした時の挙動を指定
-    clients.openWindow('https://example.com');
-});
+//     // 通知をクリックした時の挙動を指定
+//     clients.openWindow('https://example.com');
+// });
 
-// 通知を表示する処理
-function displayNotification() {
-    if (Notification.permission === 'granted') {
-        self.registration.showNotification('ポモドーロタイマー', {
-            body: '休憩時間です！',
-            icon: 'path/to/icon.png'
-        });
-    }
-}
+// // 通知を表示する処理
+// function displayNotification() {
+//     if (Notification.permission === 'granted') {
+//         self.registration.showNotification('ポモドーロタイマー', {
+//             body: '休憩時間です！',
+//             icon: 'path/to/icon.png'
+//         });
+//     }
+// }

@@ -36,9 +36,9 @@
         <button id="startStopButton" onclick="startStopTimer()">Start</button>
         <button id="resetButton" onclick="resetTimer()">Reset</button>
     </div>
+    <button id="sendNotificationButton">通知を送信する</button>
 
     <script src="main.js"></script>
-
 </body>
 <script>
     if ('serviceWorker' in navigator) {
@@ -50,6 +50,23 @@
             });
         });
     }
+
+    // 通知を送信する関数
+    function sendNotification() {
+        if (Notification.permission === 'granted') {
+            navigator.serviceWorker.ready.then(registration => {
+                registration.showNotification('ポモドーロタイマー', {
+                    body: '休憩時間です！',
+                    icon: 'path/to/icon.png'
+                });
+            });
+        } else {
+            console.warn('Notification permission is not granted.');
+        }
+    }
+
+    // 通知を送信するボタンにクリックイベントを追加
+    document.getElementById('sendNotificationButton').addEventListener('click', sendNotification);
 </script>
 
 </html>
