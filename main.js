@@ -151,6 +151,7 @@ Notification.requestPermission(function (status) {
 
 // ステータスが変わるタイミングでプッシュ通知を送信
 function sendPushNotification(status) {
+    console.log(status);
     if (Notification.permission === 'granted') {
         navigator.serviceWorker.ready.then(function (registration) {
             registration.showNotification('ポモドーロタイマー', {
