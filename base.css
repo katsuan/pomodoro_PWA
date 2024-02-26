@@ -1,13 +1,13 @@
 :root {
     --work-color: #DE5233;
-    --break-color: #32DE8A;
-    --long-break-color: #6699CC;
+    --break-color: #84EBB9;
+    --rest-color: #6CDACA;
 }
 
 .timer {
     text-align: center;
     margin-top: 100px;
-    background-color: var(--work-color);
+    background-color: var(--break-color);
     padding: 20px;
     border-radius: 10px;
 }
@@ -33,6 +33,6 @@
     background-color: var(--break-color);
 }
 
-.status.long-break {
-    background-color: var(--long-break-color);
+.status.rest {
+    background-color: var(--rest-color);
 }

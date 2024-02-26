@@ -7,29 +7,23 @@
     <title>ポモドーロタイマー</title>
     <link rel="stylesheet" href="base.css">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pomodoro Timer</title>
-    <link rel="stylesheet" href="base.css">
-</head>
-
 <body>
 
 <div class="timer">
-    <div class="status working">Working</div>
+    <div class="status">Pomodoro!
+    </div>
     <div class="status-text">(1/4)</div>
     <div class="time-display" id="time">25:00</div>
     <div>
-        <label for="workTime">Work (min)</label>
+        <label for="workTime">Work</label>
         <input type="number" id="workTime" value="25" min="1">
     </div>
     <div>
-        <label for="breakTime">Break (min)</label>
+        <label for="breakTime">Break</label>
         <input type="number" id="breakTime" value="5" min="1">
     </div>
     <div>
-        <label for="longBreakTime">Long Break (min)</label>
+        <label for="restTime">Rest</label>
         <input type="number" id="longBreakTime" value="15" min="1">
     </div>
     <div>

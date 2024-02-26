@@ -2,7 +2,7 @@
 const SECONDS_PER_MINUTE = 1;
 let workTime = 25;
 let breakTime = 5;
-let longBreakTime = 15;
+let restTime = 15;
 let repeatCount = 4;
 let currentTime;
 let timerInterval;
@@ -36,8 +36,8 @@ function startTimer() {
     } else {
         if (currentRepeat === repeatCount - 1) {
             // 最後の繰り返しの場合
-            currentTime = longBreakTime * SECONDS_PER_MINUTE;
-            setStatus('long-break');
+            currentTime = restTime * SECONDS_PER_MINUTE;
+            setStatus('rest');
             currentRepeat = 0;
         } else {
             currentTime = breakTime * SECONDS_PER_MINUTE;
@@ -105,8 +105,8 @@ document.getElementById('breakTime').addEventListener('change', function () {
     breakTime = parseInt(this.value);
 });
 
-document.getElementById('longBreakTime').addEventListener('change', function () {
-    longBreakTime = parseInt(this.value);
+document.getElementById('restTime').addEventListener('change', function () {
+    restTime = parseInt(this.value);
 });
 
 document.getElementById('repeatCount').addEventListener('change', function () {
