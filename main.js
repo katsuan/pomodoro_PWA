@@ -26,7 +26,7 @@ function startStopTimer() {
         } else {
             startTimer();
             if (isWorking && currentRepeat === 0) {
-                updateStatusText(); // カウントを更新
+                updateStatusText();
             }
         }
         document.getElementById('startStopButton').style.display = 'none';
@@ -99,6 +99,7 @@ function setStatus(status) {
     const statusElement = document.querySelector('.status');
     statusElement.textContent = status.charAt(0).toUpperCase() + status.slice(1);
     statusElement.className = 'status ' + status;
+    sendPushNotification(status)
 }
 
 function updateStatusText() {
@@ -130,3 +131,33 @@ document.getElementById('repeatCount').addEventListener('change', function () {
     repeatCount = parseInt(this.value);
     updateStatusText();
 });
+
+
+// Service Workerの登録
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js')
+        .then(function (registration) {
+            console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch(function (err) {
+            console.error('Service Worker registration failed:', err);
+        });
+}
+
+// プッシュ通知の許可
+Notification.requestPermission(function (status) {
+    console.log('Notification permission status:', status);
+});
+
+// ステータスが変わるタイミングでプッシュ通知を送信
+function sendPushNotification(status) {
+    if (Notification.permission === 'granted') {
+        navigator.serviceWorker.ready.then(function (registration) {
+            registration.showNotification('ポモドーロタイマー', {
+                body: 'ステータスが ' + status + ' に変わりました！',
+                icon: 'icon.png'
+            });
+        });
+    }
+}
+
