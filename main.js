@@ -10,6 +10,7 @@ let isWorking = true;
 let currentRepeat = 0;
 let isTimerRunning = false;
 let pausedTime = 0;
+let notification = true;
 
 document.getElementById('resetButton').style.display = 'none';
 
@@ -99,6 +100,34 @@ function setStatus(status) {
     const statusElement = document.querySelector('.status');
     statusElement.textContent = status.charAt(0).toUpperCase() + status.slice(1);
     statusElement.className = 'status ' + status;
+
+    let statusMessage;
+    let notificationMessage;
+
+    // ステータスに応じたメッセージの準備
+    switch (status) {
+        case 'working':
+            statusMessage = 'Work';
+            notificationMessage = '開始時間です！';
+            break;
+        case 'break':
+            statusMessage = 'Break';
+            notificationMessage = '少し休憩しましょう';
+            break;
+        case 'rest':
+            statusMessage = 'Rest';
+            notificationMessage = 'おつかれさまでした！';
+            break;
+        default:
+            statusMessage = status;
+            notificationMessage = '';
+    }
+
+    statusElement.textContent = statusMessage.charAt(0).toUpperCase() + statusMessage.slice(1);
+    statusElement.className = 'status ' + status;
+
+    // 通知の送信
+    sendNotification(notificationMessage);
 }
 
 function updateStatusText() {
@@ -131,4 +160,17 @@ document.getElementById('repeatCount').addEventListener('change', function () {
     updateStatusText();
 });
 
+// 通知を送信する関数
+function sendNotification(message) {
+    if (Notification.permission === 'granted') {
+        navigator.serviceWorker.ready.then(registration => {
+            registration.showNotification('ポモドーロタイマー', {
+                body: message,
+                icon: 'path/to/icon.png'
+            });
+        });
+    } else {
+        console.warn('Notification permission is not granted.');
+    }
+}
 

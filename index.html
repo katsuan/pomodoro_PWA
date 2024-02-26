@@ -56,7 +56,7 @@
         if (Notification.permission === 'granted') {
             navigator.serviceWorker.ready.then(registration => {
                 registration.showNotification('ポモドーロタイマー', {
-                    body: '休憩時間です！',
+                    body: 'ボタンから通知しました',
                     icon: 'img/icon_192.png'
                 });
             });
