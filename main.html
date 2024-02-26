@@ -6,37 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ポモドーロタイマー</title>
     <link rel="stylesheet" href="base.css">
+</head>
 
 <body>
 
-<div class="timer">
-    <div class="status">Pomodoro!
+    <div class="timer">
+        <div class="status-container">
+            <div class="status">Pomodoro!</div>
+            <div class="status-text">(0/4)</div>
+            <div class="time-display" id="time">25:00</div>
+        </div>
+        <div>
+            <label for="workTime">Work</label>
+            <input type="number" id="workTime" value="25" min="1">
+        </div>
+        <div>
+            <label for="breakTime">Break</label>
+            <input type="number" id="breakTime" value="5" min="1">
+        </div>
+        <div>
+            <label for="restTime">Rest</label>
+            <input type="number" id="restTime" value="15" min="1">
+        </div>
+        <div>
+            <label for="repeatCount">Repeat Count</label>
+            <input type="number" id="repeatCount" value="4" min="1">
+        </div>
+        <button id="startStopButton" onclick="startStopTimer()">Start</button>
+        <button id="resetButton" onclick="resetTimer()">Reset</button>
     </div>
-    <div class="status-text">(1/4)</div>
-    <div class="time-display" id="time">25:00</div>
-    <div>
-        <label for="workTime">Work</label>
-        <input type="number" id="workTime" value="25" min="1">
-    </div>
-    <div>
-        <label for="breakTime">Break</label>
-        <input type="number" id="breakTime" value="5" min="1">
-    </div>
-    <div>
-        <label for="restTime">Rest</label>
-        <input type="number" id="longBreakTime" value="15" min="1">
-    </div>
-    <div>
-        <label for="repeatCount">Repeat Count</label>
-        <input type="number" id="repeatCount" value="4" min="1">
-    </div>
-    <button id="startStopButton" onclick="startStopTimer()">Start</button>
-    <button id="resetButton" onclick="resetTimer()">Reset</button>
-</div>
-
-
 
     <script src="main.js"></script>
+
 </body>
 
 </html>

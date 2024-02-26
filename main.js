@@ -1,8 +1,8 @@
 // main.js
 const SECONDS_PER_MINUTE = 1;
-let workTime = 25;
-let breakTime = 5;
-let restTime = 15;
+let workTime = 25 * SECONDS_PER_MINUTE;
+let breakTime = 5 * SECONDS_PER_MINUTE;
+let restTime = 15 * SECONDS_PER_MINUTE;
 let repeatCount = 4;
 let currentTime;
 let timerInterval;
@@ -10,6 +10,8 @@ let isWorking = true;
 let currentRepeat = 0;
 let isTimerRunning = false;
 let pausedTime = 0;
+
+document.getElementById('resetButton').style.display = 'none';
 
 function startStopTimer() {
     if (isTimerRunning) {
@@ -23,26 +25,30 @@ function startStopTimer() {
             pausedTime = 0;
         } else {
             startTimer();
+            if (isWorking && currentRepeat === 0) {
+                updateStatusText(); // カウントを更新
+            }
         }
-        document.getElementById('startStopButton').innerText = 'Stop';
+        document.getElementById('startStopButton').style.display = 'none';
         isTimerRunning = true;
     }
 }
 
 function startTimer() {
     if (isWorking) {
-        currentTime = workTime * SECONDS_PER_MINUTE;
+        currentTime = workTime;
         setStatus('working');
+        if (currentRepeat === 0) {
+            updateStatusText();
+        }
+        currentRepeat++;
     } else {
-        if (currentRepeat === repeatCount - 1) {
-            // 最後の繰り返しの場合
-            currentTime = restTime * SECONDS_PER_MINUTE;
+        if (currentRepeat % repeatCount === 0) {
+            currentTime = restTime;
             setStatus('rest');
-            currentRepeat = 0;
         } else {
-            currentTime = breakTime * SECONDS_PER_MINUTE;
+            currentTime = breakTime;
             setStatus('break');
-            currentRepeat++;
         }
     }
 
@@ -72,8 +78,8 @@ function updateTime() {
 
 function resetTimer() {
     clearInterval(timerInterval);
-    let minutes = Math.floor(workTime);
-    let seconds = Math.floor((workTime - minutes) * 60);
+    let minutes = Math.floor(workTime / SECONDS_PER_MINUTE);
+    let seconds = workTime % SECONDS_PER_MINUTE;
 
     if (seconds < 10) {
         seconds = "0" + seconds;
@@ -81,9 +87,12 @@ function resetTimer() {
 
     document.getElementById("time").innerText = minutes + ":" + seconds;
     document.getElementById('startStopButton').innerText = 'Start';
+    document.getElementById('startStopButton').style.display = '';
     isTimerRunning = false;
     pausedTime = 0;
     document.getElementById('resetButton').style.display = 'none';
+    currentRepeat = 0;
+    updateStatusText();
 }
 
 function setStatus(status) {
@@ -94,21 +103,30 @@ function setStatus(status) {
 
 function updateStatusText() {
     const statusText = document.querySelector('.status-text');
-    statusText.textContent = "(" + (currentRepeat + 1) + "/" + repeatCount + ")";
+    if (isWorking) {
+        statusText.textContent = "(" + currentRepeat + "/" + repeatCount + ")";
+    } else {
+        if (currentRepeat === repeatCount) {
+            statusText.textContent = "(" + repeatCount + "/" + repeatCount + ")";
+        } else {
+            statusText.textContent = "(" + currentRepeat + "/" + repeatCount + ")";
+        }
+    }
 }
 
 document.getElementById('workTime').addEventListener('change', function () {
-    workTime = parseInt(this.value);
+    workTime = parseInt(this.value) * SECONDS_PER_MINUTE;
 });
 
 document.getElementById('breakTime').addEventListener('change', function () {
-    breakTime = parseInt(this.value);
+    breakTime = parseInt(this.value) * SECONDS_PER_MINUTE;
 });
 
 document.getElementById('restTime').addEventListener('change', function () {
-    restTime = parseInt(this.value);
+    restTime = parseInt(this.value) * SECONDS_PER_MINUTE;
 });
 
 document.getElementById('repeatCount').addEventListener('change', function () {
     repeatCount = parseInt(this.value);
+    updateStatusText();
 });
