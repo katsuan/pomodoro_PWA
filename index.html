@@ -51,20 +51,6 @@
         });
     }
 
-    // 通知を送信する関数
-    function sendNotification() {
-        if (Notification.permission === 'granted') {
-            navigator.serviceWorker.ready.then(registration => {
-                registration.showNotification('ポモドーロタイマー', {
-                    body: 'ボタンから通知しました',
-                    icon: 'img/icon_192.png'
-                });
-            });
-        } else {
-            console.warn('Notification permission is not granted.');
-        }
-    }
-
     // 通知を送信するボタンにクリックイベントを追加
     document.getElementById('sendNotificationButton').addEventListener('click', sendNotification);
 </script>
