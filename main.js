@@ -1,5 +1,5 @@
 // main.js
-const SECONDS_PER_MINUTE = 1;
+const SECONDS_PER_MINUTE = 60;
 let workTime = 25 * SECONDS_PER_MINUTE;
 let breakTime = 5 * SECONDS_PER_MINUTE;
 let restTime = 15 * SECONDS_PER_MINUTE;
