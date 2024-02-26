@@ -1,127 +1,114 @@
-// Constants
+// main.js
 const SECONDS_PER_MINUTE = 1;
-let WORK_TIME = 25 * SECONDS_PER_MINUTE; // Default: 25 minutes in seconds
-let BREAK_TIME = 5 * SECONDS_PER_MINUTE; // Default: 5 minutes in seconds
-let workVideoURL = '';
-let breakVideoURL = '';
+let workTime = 25;
+let breakTime = 5;
+let longBreakTime = 15;
+let repeatCount = 4;
+let currentTime;
+let timerInterval;
+let isWorking = true;
+let currentRepeat = 0;
+let isTimerRunning = false;
+let pausedTime = 0;
 
-// Variables
-let timer;
-let isWorking = true; // Indicates whether it's work time or break time
-
-// DOM Elements
-const timerDisplay = document.getElementById('timer-display');
-const timerContainer = document.querySelector('.timer-container');
-const startButton = document.getElementById('start-button');
-const pauseButton = document.getElementById('pause-button');
-const resetButton = document.getElementById('reset-button');
-const workTimeInput = document.getElementById('work-time-input');
-const breakTimeInput = document.getElementById('break-time-input');
-const workVideoInput = document.getElementById('work-video-input');
-const breakVideoInput = document.getElementById('break-video-input');
-const youtubeVideo = document.getElementById('youtube-video');
-const bgm = document.getElementById('bgm');
-
-// Functions
-function getFormValues() {
-    const workTime = workTimeInput.value * SECONDS_PER_MINUTE;
-    const breakTime = breakTimeInput.value * SECONDS_PER_MINUTE;
-    const workVideo = workVideoInput.value;
-    const breakVideo = breakVideoInput.value;
-
-    return {
-        workTime: workTime,
-        breakTime: breakTime,
-        workVideo: workVideo,
-        breakVideo: breakVideo
-    };
+function startStopTimer() {
+    if (isTimerRunning) {
+        clearInterval(timerInterval);
+        document.getElementById('startStopButton').innerText = 'Start';
+        isTimerRunning = false;
+        pausedTime = currentTime;
+    } else {
+        if (pausedTime > 0) {
+            currentTime = pausedTime;
+            pausedTime = 0;
+        } else {
+            startTimer();
+        }
+        document.getElementById('startStopButton').innerText = 'Stop';
+        isTimerRunning = true;
+    }
 }
 
 function startTimer() {
-    const formValues = getFormValues();
-    WORK_TIME = formValues.workTime;
-    BREAK_TIME = formValues.breakTime;
-    workVideoURL = formValues.workVideo;
-    breakVideoURL = formValues.breakVideo;
-    timer = setInterval(updateTimer, 1000);
+    if (isWorking) {
+        currentTime = workTime * SECONDS_PER_MINUTE;
+        setStatus('working');
+    } else {
+        if (currentRepeat === repeatCount - 1) {
+            // 最後の繰り返しの場合
+            currentTime = longBreakTime * SECONDS_PER_MINUTE;
+            setStatus('long-break');
+            currentRepeat = 0;
+        } else {
+            currentTime = breakTime * SECONDS_PER_MINUTE;
+            setStatus('break');
+            currentRepeat++;
+        }
+    }
+
+    updateStatusText();
+    timerInterval = setInterval(updateTime, 1000);
+    document.getElementById('resetButton').style.display = 'inline';
 }
 
-function pauseTimer() {
-    clearInterval(timer);
+function updateTime() {
+    let minutes = Math.floor(currentTime / SECONDS_PER_MINUTE);
+    let seconds = currentTime % SECONDS_PER_MINUTE;
+
+    if (seconds < 10) {
+        seconds = "0" + seconds;
+    }
+
+    document.getElementById("time").innerText = minutes + ":" + seconds;
+
+    if (currentTime <= 0) {
+        clearInterval(timerInterval);
+        isWorking = !isWorking;
+        startTimer();
+    } else {
+        currentTime--;
+    }
 }
 
 function resetTimer() {
-    clearInterval(timer);
-    isWorking = true;
-    const formValues = getFormValues();
-    WORK_TIME = formValues.workTime;
-    BREAK_TIME = formValues.breakTime;
-    workVideoURL = formValues.workVideo;
-    breakVideoURL = formValues.breakVideo;
-    updateTimerDisplay(WORK_TIME);
-}
+    clearInterval(timerInterval);
+    let minutes = Math.floor(workTime);
+    let seconds = Math.floor((workTime - minutes) * 60);
 
-function updateTimer() {
-    if (isWorking) {
-        WORK_TIME--;
-        updateTimerDisplay(WORK_TIME);
-
-        if (WORK_TIME <= 0) {
-            isWorking = false;
-            playBGM('break');
-            youtubeVideo.src = breakVideoURL;
-            updateTimerDisplay(BREAK_TIME);
-            timerContainer.classList.remove('work');
-            timerContainer.classList.add('break');
-        }
-    } else {
-        BREAK_TIME--;
-        updateTimerDisplay(BREAK_TIME);
-
-        if (BREAK_TIME <= 0) {
-            isWorking = true;
-            playBGM('work');
-            youtubeVideo.src = workVideoURL;
-            updateTimerDisplay(WORK_TIME);
-            timerContainer.classList.remove('break');
-            timerContainer.classList.add('work');
-        }
+    if (seconds < 10) {
+        seconds = "0" + seconds;
     }
+
+    document.getElementById("time").innerText = minutes + ":" + seconds;
+    document.getElementById('startStopButton').innerText = 'Start';
+    isTimerRunning = false;
+    pausedTime = 0;
+    document.getElementById('resetButton').style.display = 'none';
 }
 
-function updateTimerDisplay(time) {
-    const minutes = Math.floor(time / SECONDS_PER_MINUTE);
-    const seconds = time % SECONDS_PER_MINUTE;
-    timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-    // タイマーの状態に応じて背景色を変更
-    if (isWorking) {
-        timerContainer.classList.remove('break');
-        timerContainer.classList.add('work');
-    } else {
-        timerContainer.classList.remove('work');
-        timerContainer.classList.add('break');
-    }
+function setStatus(status) {
+    const statusElement = document.querySelector('.status');
+    statusElement.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+    statusElement.className = 'status ' + status;
 }
 
-function playBGM(type) {
-    if (type === 'work') {
-        bgm.src = 'work_bgm.mp3'; // Assuming file name for work BGM
-    } else {
-        bgm.src = 'break_bgm.mp3'; // Assuming file name for break BGM
-    }
-    bgm.loop = true;
-    bgm.play();
+function updateStatusText() {
+    const statusText = document.querySelector('.status-text');
+    statusText.textContent = "(" + (currentRepeat + 1) + "/" + repeatCount + ")";
 }
 
-// Event Listeners
-startButton.addEventListener('click', startTimer);
-pauseButton.addEventListener('click', pauseTimer);
-resetButton.addEventListener('click', resetTimer);
+document.getElementById('workTime').addEventListener('change', function () {
+    workTime = parseInt(this.value);
+});
 
-// Initial Setup
-updateTimerDisplay(WORK_TIME);
+document.getElementById('breakTime').addEventListener('change', function () {
+    breakTime = parseInt(this.value);
+});
 
-// Fetch initial video URLs from inputs
-workVideoURL = workVideoInput.value;
-breakVideoURL = breakVideoInput.value;
+document.getElementById('longBreakTime').addEventListener('change', function () {
+    longBreakTime = parseInt(this.value);
+});
+
+document.getElementById('repeatCount').addEventListener('change', function () {
+    repeatCount = parseInt(this.value);
+});

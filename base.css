@@ -1,61 +1,38 @@
 :root {
-    --work-color: #32DE8A;
-    --break-color: #DE5233;
+    --work-color: #DE5233;
+    --break-color: #32DE8A;
     --long-break-color: #6699CC;
 }
 
-body {
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    margin: 0;
+.timer {
+    text-align: center;
+    margin-top: 100px;
     background-color: var(--work-color);
+    padding: 20px;
+    border-radius: 10px;
 }
 
-.timer-container {
-    text-align: center;
-    margin-top: 50px;
+.time-display {
+    font-size: 36px;
+    font-weight: bold;
     margin-bottom: 20px;
 }
 
-.timer-container.break {
+.status {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: white;
+}
+
+.status.working {
+    background-color: var(--work-color);
+}
+
+.status.break {
     background-color: var(--break-color);
 }
 
-.timer-container.work {
-    background-color: var(--work-color);
-}
-
-.timer-container.long-break {
+.status.long-break {
     background-color: var(--long-break-color);
-}
-
-.timer-container button {
-    margin: 10px;
-}
-
-.timer-controls {
-    margin-bottom: 20px;
-}
-
-.input-container {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.input-container label {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.input-container input {
-    margin-bottom: 10px;
-}
-
-.video-container {
-    text-align: center;
-    margin-top: 50px;
 }
