@@ -99,7 +99,6 @@ function setStatus(status) {
     const statusElement = document.querySelector('.status');
     statusElement.textContent = status.charAt(0).toUpperCase() + status.slice(1);
     statusElement.className = 'status ' + status;
-    sendPushNotification(status)
 }
 
 function updateStatusText() {
@@ -143,22 +142,3 @@ if ('serviceWorker' in navigator) {
             console.error('Service Worker registration failed:', err);
         });
 }
-
-// プッシュ通知の許可
-Notification.requestPermission(function (status) {
-    console.log('Notification permission status:', status);
-});
-
-// ステータスが変わるタイミングでプッシュ通知を送信
-function sendPushNotification(status) {
-    console.log(status);
-    if (Notification.permission === 'granted') {
-        navigator.serviceWorker.ready.then(function (registration) {
-            registration.showNotification('ポモドーロタイマー', {
-                body: 'ステータスが ' + status + ' に変わりました！',
-                icon: 'icon.png'
-            });
-        });
-    }
-}
-
